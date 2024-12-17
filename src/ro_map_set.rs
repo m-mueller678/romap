@@ -1,6 +1,14 @@
 use crate::RoMap;
 use core::marker::PhantomData;
 
+/// An Adapter that discards values, returning only keys.
+/// ```
+/// # use std::collections::{HashSet};
+/// # use romap::{RoMap, RoMapSet};
+/// fn to_set<'a, K: 'a, V: 'a>(x: impl RoMap<'a, K, V>) -> impl RoMap<'a, K, ()> {
+///     RoMapSet::from(x)
+/// }
+/// ```
 pub struct RoMapSet<'a, K, V, M> {
     inner: M,
     _p: PhantomData<(&'a K, &'a V)>,
