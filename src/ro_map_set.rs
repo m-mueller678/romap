@@ -27,12 +27,12 @@ impl<'a, K: 'a, V: 'a, M: RoMap<'a, K, V>> RoMap<'a, K, ()> for RoMapSet<'a, K, 
     const ITER_ORDER_DETERMINISTIC: bool = M::ITER_ORDER_DETERMINISTIC;
     const ITER_ORDER_SORTED: bool = M::ITER_ORDER_SORTED;
 
-    fn contains_key(self, j: &K) -> bool {
-        self.inner.contains_key(j)
+    fn contains_key(self, k: &K) -> bool {
+        self.inner.contains_key(k)
     }
 
-    fn get(self, j: &K) -> Option<&'a ()> {
-        if self.inner.contains_key(j) {
+    fn get(self, k: &K) -> Option<&'a ()> {
+        if self.inner.contains_key(k) {
             Some(&())
         } else {
             None
@@ -47,12 +47,12 @@ impl<'a, K: 'a, V: 'a, M: RoMap<'a, K, V>> RoMap<'a, K, ()> for RoMapSet<'a, K, 
         self.inner.len()
     }
 
-    fn get_key(self, j: &K) -> Option<&'a K> {
-        self.inner.get_key(j)
+    fn get_key(self, k: &K) -> Option<&'a K> {
+        self.inner.get_key(k)
     }
 
-    fn get_key_value(self, j: &K) -> Option<(&'a K, &'a ())> {
-        Some((self.inner.get_key(j)?, &()))
+    fn get_key_value(self, k: &K) -> Option<(&'a K, &'a ())> {
+        Some((self.inner.get_key(k)?, &()))
     }
 
     fn keys(self) -> impl Iterator<Item = &'a K> {

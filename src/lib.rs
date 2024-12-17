@@ -9,16 +9,16 @@ pub trait RoMap<'a, K: 'a, V: 'a>: Copy {
     const ITER_ORDER_DETERMINISTIC: bool = false;
     const ITER_ORDER_SORTED: bool = false;
 
-    fn contains_key(self, j: &K) -> bool {
-        self.get_key(j).is_some()
+    fn contains_key(self, k: &K) -> bool {
+        self.get_key(k).is_some()
     }
-    fn get(self, j: &K) -> Option<&'a V> {
-        Some(self.get_key_value(j)?.1)
+    fn get(self, k: &K) -> Option<&'a V> {
+        Some(self.get_key_value(k)?.1)
     }
-    fn get_key(self, j: &K) -> Option<&'a K> {
-        Some(self.get_key_value(j)?.0)
+    fn get_key(self, k: &K) -> Option<&'a K> {
+        Some(self.get_key_value(k)?.0)
     }
-    fn get_key_value(self, j: &K) -> Option<(&'a K, &'a V)>;
+    fn get_key_value(self, k: &K) -> Option<(&'a K, &'a V)>;
 
     fn is_empty(self) -> bool {
         self.len() == 0
