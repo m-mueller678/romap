@@ -1,0 +1,16 @@
+[package]
+name = "romap"
+version = "0.1.0"
+edition = "2021"
+keywords = ["traits","data-structures","container","map"]
+categories = ["rust-patterns","no-std::no-alloc","algorithms"]
+authors = ["m-mueller678"]
+description = "A trait for read-only-maps"
+repository = "https://github.com/m-mueller678/romap"
+license = "MIT OR Apache-2.0"
+
+[features]
+std = []
+default = ["std"]
+
+[dependencies]
