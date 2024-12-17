@@ -1,9 +1,6 @@
-use core::hash::Hash;
-
-mod ro_map_set;
 pub use ro_map_set::RoMapSet;
 
-#[cfg(feature = "std")]
+mod ro_map_set;
 mod std_maps;
 
 pub trait RoMap<'a, K: 'a, V: 'a>: Copy {
@@ -16,20 +13,24 @@ pub trait RoMap<'a, K: 'a, V: 'a>: Copy {
     fn get(self, j: &K) -> Option<&'a V> {
         Some(self.get_key_value(j)?.1)
     }
+    fn get_key(self, j: &K) -> Option<&'a K> {
+        Some(self.get_key_value(j)?.0)
+    }
+    fn get_key_value(self, j: &K) -> Option<(&'a K, &'a V)>;
+
+    fn is_empty(self) -> bool {
+        self.len() == 0
+    }
 
     fn len(self) -> usize {
         self.keys().count()
     }
 
-    fn get_key(self, j: &K) -> Option<&'a K> {
-        Some(self.get_key_value(j)?.0)
-    }
-    fn get_key_value(self, j: &K) -> Option<(&'a K, &'a V)>;
     fn keys(self) -> impl Iterator<Item = &'a K> {
-        self.iter().map(|(k, v)| k)
+        self.iter().map(|(k, _)| k)
     }
     fn values(self) -> impl Iterator<Item = &'a V> {
-        self.iter().map(|(k, v)| v)
+        self.iter().map(|(_, v)| v)
     }
     fn iter(self) -> impl Iterator<Item = (&'a K, &'a V)>;
 }

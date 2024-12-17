@@ -1,3 +1,5 @@
+#![cfg(feature = "std")]
+
 use crate::RoMap;
 use std::collections::{BTreeMap, HashMap};
 use std::hash::Hash;
@@ -9,6 +11,10 @@ impl<'a, K: Hash + Eq + 'a, V: 'a> RoMap<'a, K, V> for &'a HashMap<K, V> {
 
     fn get(self, j: &K) -> Option<&'a V> {
         HashMap::get(self, j)
+    }
+
+    fn is_empty(self) -> bool {
+        HashMap::is_empty(self)
     }
 
     fn len(self) -> usize {
@@ -42,6 +48,10 @@ impl<'a, K: Ord + 'a, V: 'a> RoMap<'a, K, V> for &'a BTreeMap<K, V> {
 
     fn get(self, j: &K) -> Option<&'a V> {
         BTreeMap::get(self, j)
+    }
+
+    fn is_empty(self) -> bool {
+        BTreeMap::is_empty(self)
     }
 
     fn len(self) -> usize {

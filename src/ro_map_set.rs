@@ -39,6 +39,14 @@ impl<'a, K: 'a, V: 'a, M: RoMap<'a, K, V>> RoMap<'a, K, ()> for RoMapSet<'a, K, 
         }
     }
 
+    fn is_empty(self) -> bool {
+        self.inner.is_empty()
+    }
+
+    fn len(self) -> usize {
+        self.inner.len()
+    }
+
     fn get_key(self, j: &K) -> Option<&'a K> {
         self.inner.get_key(j)
     }
