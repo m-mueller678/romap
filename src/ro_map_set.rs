@@ -24,7 +24,6 @@ impl<'a, K: 'a, V: 'a, M: RoMap<'a, K, V>> Clone for RoMapSet<'a, K, V, M> {
 }
 
 impl<'a, K: 'a, V: 'a, M: RoMap<'a, K, V>> RoMap<'a, K, ()> for RoMapSet<'a, K, V, M> {
-    const ITER_ORDER_DETERMINISTIC: bool = M::ITER_ORDER_DETERMINISTIC;
     const ITER_ORDER_SORTED: bool = M::ITER_ORDER_SORTED;
 
     fn contains_key(self, k: &K) -> bool {

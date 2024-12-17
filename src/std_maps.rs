@@ -64,7 +64,6 @@ impl<'a, K: Hash + Eq + 'a> RoMap<'a, K, ()> for &'a HashSet<K> {
 }
 
 impl<'a, K: Ord + 'a, V: 'a> RoMap<'a, K, V> for &'a BTreeMap<K, V> {
-    const ITER_ORDER_DETERMINISTIC: bool = true;
     const ITER_ORDER_SORTED: bool = true;
 
     fn contains_key(self, k: &K) -> bool {

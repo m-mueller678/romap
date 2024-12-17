@@ -12,10 +12,6 @@ pub fn test_map<
     m: M,
     not_contained: &K,
 ) {
-    if M::ITER_ORDER_SORTED {
-        assert!(M::ITER_ORDER_DETERMINISTIC)
-    }
-
     assert_eq!(m.is_empty(), m.len() == 0);
     let assert_contained = |k, should: Option<&V>| {
         assert_eq!(m.contains_key(k), should.is_some());
