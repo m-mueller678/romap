@@ -2,6 +2,7 @@ use crate::RoMap;
 use core::marker::PhantomData;
 use std::ops::Deref;
 
+/// Applies some function to the values of a map.
 pub fn project_value<
     'a,
     K: 'a + ?Sized,
@@ -20,6 +21,7 @@ pub fn project_value<
     }
 }
 
+/// Calls [deref](core::ops::Deref) on the values of a map.
 pub fn deref_value<'a, K: 'a + ?Sized, VI: 'a + Deref + ?Sized, M: RoMap<'a, K, VI>>(
     map: M,
 ) -> impl RoMap<'a, K, VI::Target> {

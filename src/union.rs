@@ -1,9 +1,16 @@
 use crate::RoMap;
 
-pub fn union<A, B>(a: A, b: B) -> Union<A, B> {
+/// Returns the union of two maps.
+///
+/// If an item is contained in both, the record from `a` is used.
+pub fn union<'a, K: 'a + ?Sized, V: 'a + ?Sized, A: RoMap<'a, K, V>, B: RoMap<'a, K, V>>(
+    a: A,
+    b: B,
+) -> Union<A, B> {
     Union { a, b }
 }
 
+/// See [union]
 #[derive(Copy, Clone)]
 pub struct Union<A, B> {
     a: A,

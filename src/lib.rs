@@ -41,10 +41,16 @@
 //! }
 //! ```
 
-pub use ro_map_set::RoMapSet;
-pub use union::{union, Union};
+pub use discard_values::discard_values;
+pub use union::union;
 pub use value_projection::{deref_value, project_value};
-mod ro_map_set;
+mod discard_values;
+
+/// The concrete combinator types
+pub mod structs {
+    pub use crate::discard_values::DiscardValues;
+    pub use crate::union::Union;
+}
 #[cfg(feature = "std")]
 mod std_maps;
 #[cfg(feature = "test_utils")]
