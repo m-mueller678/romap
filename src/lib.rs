@@ -42,6 +42,7 @@
 //! ```
 
 pub use discard_values::discard_values;
+pub use empty::Empty;
 pub use union::union;
 pub use value_projection::{deref_value, project_value};
 mod discard_values;
@@ -51,6 +52,9 @@ pub mod structs {
     pub use crate::discard_values::DiscardValues;
     pub use crate::union::Union;
 }
+mod either;
+mod empty;
+mod option;
 #[cfg(feature = "std")]
 mod std_maps;
 #[cfg(feature = "test_utils")]
