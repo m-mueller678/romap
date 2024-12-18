@@ -4,25 +4,46 @@
 //! It is intended to allow library authors more flexibility in the types they accept:
 //!
 //! ```rust
-//! # use romap::RoMap;
+//! # use std::collections::{BTreeMap, HashMap};
+//! use romap::{deref_value, RoMap};
 //! # struct Cat;
 //! # struct Dog;
 //! # trait Pet:'static{}
-//! trait MyPetList {
+//! trait MyPetListTrait {
 //!     fn cats(&self) -> impl RoMap<str, Cat>;
 //!     fn dogs(&self) -> impl RoMap<str, Dog>;
 //!     fn all_pets(&self) -> impl RoMap<str, dyn Pet>;
+//! }
+//!
+//! struct MyPetListImpl {
+//!     cats: HashMap<String, Cat>,
+//!     dogs: BTreeMap<&'static str, Box<Dog>>,
+//! }
+//!
+//! impl MyPetListTrait for MyPetListImpl {
+//!     fn cats(&self) -> impl RoMap<str, Cat> {
+//!         &self.cats
+//!     }
+//!
+//!     fn dogs(&self) -> impl RoMap<str, Dog> {
+//!         deref_value(&self.dogs)
+//!     }
+//!
+//!     fn all_pets(&self) -> impl RoMap<str, dyn Pet> {
+//!         todo!()
+//!     }
 //! }
 //! ```
 //! This crate also provides implementations for the applicable `std` collections: `{Hash|BTree}{Map|Set}`.
 
 pub use ro_map_set::RoMapSet;
-
+pub use value_projection::{deref_value, project_value};
 mod ro_map_set;
 #[cfg(feature = "std")]
 mod std_maps;
 #[cfg(feature = "test_utils")]
 pub mod test_utils;
+mod value_projection;
 
 /// A read-only-map.
 pub trait RoMap<'a, K: 'a + ?Sized, V: 'a + ?Sized>: 'a + Copy {
