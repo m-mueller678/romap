@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(rustdoc::redundant_explicit_links)]
-//! The [`RoMap`](RoMap) trait, describes a read-only-map.
+//! The [`RoMap`](RoMap) trait describes a read-only-map.
 //! It is intended to allow library authors more flexibility in the types they accept.
 //!
 //! This crate includes combinators and implementations for common containers.
