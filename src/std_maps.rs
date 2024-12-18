@@ -1,5 +1,3 @@
-#![cfg(feature = "std")]
-
 use crate::RoMap;
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};

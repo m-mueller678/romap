@@ -18,8 +18,6 @@ pub use ro_map_set::RoMapSet;
 
 mod ro_map_set;
 mod std_maps;
-
-mod mapped;
 #[cfg(feature = "test_utils")]
 pub mod test_utils;
 
