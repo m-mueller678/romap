@@ -1,3 +1,5 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
 //! This crate provides the [`RoMap`](RoMap) trait, which describes a read-only-map data structure.
 //! It is intended to allow library authors more flexibility in the types they accept:
 //!
@@ -17,6 +19,7 @@
 pub use ro_map_set::RoMapSet;
 
 mod ro_map_set;
+#[cfg(feature = "std")]
 mod std_maps;
 #[cfg(feature = "test_utils")]
 pub mod test_utils;
