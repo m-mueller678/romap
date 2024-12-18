@@ -1,126 +1,92 @@
 #![cfg(feature = "std")]
 
 use crate::RoMap;
+use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::hash::Hash;
 
-impl<'a, K: Hash + Eq + 'a, V: 'a> RoMap<'a, K, V> for &'a HashMap<K, V> {
-    fn contains_key(self, k: &K) -> bool {
-        HashMap::contains_key(self, k)
-    }
+macro_rules! impl_map {
+    ($Container:ty) => {
+        fn contains_key(self, k: &KO) -> bool {
+            <$Container>::contains_key(self, k)
+        }
 
-    fn get(self, k: &K) -> Option<&'a V> {
-        HashMap::get(self, k)
-    }
+        fn get(self, k: &KO) -> Option<&'a V> {
+            <$Container>::get(self, k)
+        }
 
-    fn is_empty(self) -> bool {
-        HashMap::is_empty(self)
-    }
+        fn get_key_value(self, k: &KO) -> Option<(&'a KO, &'a V)> {
+            let (k, v) = <$Container>::get_key_value(self, k)?;
+            Some((k.borrow(), v))
+        }
 
-    fn len(self) -> usize {
-        HashMap::len(self)
-    }
+        fn is_empty(self) -> bool {
+            <$Container>::is_empty(self)
+        }
 
-    fn get_key_value(self, k: &K) -> Option<(&'a K, &'a V)> {
-        HashMap::get_key_value(self, k)
-    }
+        fn len(self) -> usize {
+            <$Container>::len(self)
+        }
 
-    fn keys(self) -> impl Iterator<Item = &'a K> {
-        HashMap::keys(self)
-    }
+        fn keys(self) -> impl Iterator<Item = &'a KO> {
+            <$Container>::keys(self).map(Borrow::borrow)
+        }
 
-    fn values(self) -> impl Iterator<Item = &'a V> {
-        HashMap::values(self)
-    }
+        fn values(self) -> impl Iterator<Item = &'a V> {
+            <$Container>::values(self)
+        }
 
-    fn iter(self) -> impl Iterator<Item = (&'a K, &'a V)> {
-        HashMap::iter(self)
-    }
-}
-impl<'a, K: Hash + Eq + 'a> RoMap<'a, K, ()> for &'a HashSet<K> {
-    fn contains_key(self, k: &K) -> bool {
-        HashSet::contains(self, k)
-    }
-
-    fn get_key_value(self, k: &K) -> Option<(&'a K, &'a ())> {
-        Some((HashSet::get(self, k)?, &()))
-    }
-
-    fn is_empty(self) -> bool {
-        HashSet::is_empty(self)
-    }
-
-    fn len(self) -> usize {
-        HashSet::len(self)
-    }
-
-    fn keys(self) -> impl Iterator<Item = &'a K> {
-        HashSet::iter(self)
-    }
-
-    fn iter(self) -> impl Iterator<Item = (&'a K, &'a ())> {
-        HashSet::iter(self).map(|x| (x, &()))
-    }
+        fn iter(self) -> impl Iterator<Item = (&'a KO, &'a V)> {
+            <$Container>::iter(self).map(|(k, v)| (k.borrow(), v))
+        }
+    };
 }
 
-impl<'a, K: Ord + 'a, V: 'a> RoMap<'a, K, V> for &'a BTreeMap<K, V> {
+impl<'a, KI: Hash + Eq + Borrow<KO>, V: 'a, KO: Hash + Eq + ?Sized + 'a> RoMap<'a, KO, V>
+    for &'a HashMap<KI, V>
+{
+    impl_map!(HashMap::<KI, V>);
+}
+
+impl<'a, KI: Ord + Borrow<KO>, V: 'a, KO: Ord + ?Sized + 'a> RoMap<'a, KO, V>
+    for &'a BTreeMap<KI, V>
+{
     const ITER_ORDER_SORTED: bool = true;
 
-    fn contains_key(self, k: &K) -> bool {
-        BTreeMap::contains_key(self, k)
-    }
-
-    fn get(self, k: &K) -> Option<&'a V> {
-        BTreeMap::get(self, k)
-    }
-
-    fn is_empty(self) -> bool {
-        BTreeMap::is_empty(self)
-    }
-
-    fn len(self) -> usize {
-        BTreeMap::len(self)
-    }
-
-    fn get_key_value(self, k: &K) -> Option<(&'a K, &'a V)> {
-        BTreeMap::get_key_value(self, k)
-    }
-
-    fn keys(self) -> impl Iterator<Item = &'a K> {
-        BTreeMap::keys(self)
-    }
-
-    fn values(self) -> impl Iterator<Item = &'a V> {
-        BTreeMap::values(self)
-    }
-
-    fn iter(self) -> impl Iterator<Item = (&'a K, &'a V)> {
-        BTreeMap::iter(self)
-    }
+    impl_map!(BTreeMap::<KI, V>);
 }
 
-impl<'a, K: Ord + 'a> RoMap<'a, K, ()> for &'a BTreeSet<K> {
-    fn contains_key(self, k: &K) -> bool {
-        BTreeSet::contains(self, k)
-    }
+macro_rules! impl_set {
+    ($Container:ty) => {
+        fn contains_key(self, k: &KO) -> bool {
+            <$Container>::contains(self, k)
+        }
 
-    fn get_key_value(self, k: &K) -> Option<(&'a K, &'a ())> {
-        Some((BTreeSet::get(self, k)?, &()))
-    }
+        fn get_key_value(self, k: &KO) -> Option<(&'a KO, &'a ())> {
+            Some((<$Container>::get(self, k)?.borrow(), &()))
+        }
 
-    fn is_empty(self) -> bool {
-        BTreeSet::is_empty(self)
-    }
+        fn is_empty(self) -> bool {
+            <$Container>::is_empty(self)
+        }
 
-    fn len(self) -> usize {
-        BTreeSet::len(self)
-    }
+        fn len(self) -> usize {
+            <$Container>::len(self)
+        }
 
-    fn keys(self) -> impl Iterator<Item = &'a K> {
-        BTreeSet::iter(self)
-    }
+        fn iter(self) -> impl Iterator<Item = (&'a KO, &'a ())> {
+            <$Container>::iter(self).map(|k| (k.borrow(), &()))
+        }
+    };
+}
 
-    fn iter(self) -> impl Iterator<Item = (&'a K, &'a ())> {
-        BTreeSet::iter(self).map(|x| (x, &()))
-    }
+impl<'a, KI: Hash + Eq + Borrow<KO>, KO: Hash + Eq + ?Sized + 'a> RoMap<'a, KO, ()>
+    for &'a HashSet<KI>
+{
+    impl_set!(HashSet<KI>);
+}
+
+impl<'a, KI: Ord + Borrow<KO>, KO: Ord + ?Sized + 'a> RoMap<'a, KO, ()> for &'a BTreeSet<KI> {
+    const ITER_ORDER_SORTED: bool = true;
+    impl_set!(BTreeSet<KI>);
 }
