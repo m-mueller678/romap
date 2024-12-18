@@ -1,6 +1,6 @@
 use crate::RoMap;
 use core::marker::PhantomData;
-use std::ops::Deref;
+use core::ops::Deref;
 
 /// Applies some function to the values of a map.
 pub fn project_value<
