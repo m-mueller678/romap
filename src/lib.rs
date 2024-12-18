@@ -18,11 +18,13 @@ pub use ro_map_set::RoMapSet;
 
 mod ro_map_set;
 mod std_maps;
+
+mod mapped;
 #[cfg(feature = "test_utils")]
 pub mod test_utils;
 
 /// A read-only-map.
-pub trait RoMap<'a, K: 'a + ?Sized, V: 'a + ?Sized>: Copy {
+pub trait RoMap<'a, K: 'a + ?Sized, V: 'a + ?Sized>: 'a + Copy {
     /// If true, then all iterators returned by methods of this trait return elements sorted by their keys.
     const ITER_ORDER_SORTED: bool = false;
 
@@ -45,13 +47,13 @@ pub trait RoMap<'a, K: 'a + ?Sized, V: 'a + ?Sized>: Copy {
         self.keys().count()
     }
 
-    fn keys(self) -> impl Iterator<Item = &'a K> {
+    fn keys(self) -> impl 'a + Iterator<Item = &'a K> {
         self.iter().map(|(k, _)| k)
     }
     /// Values are returned in an arbitrary order, not necessarily the same order as returned by [keys](Self::keys).
     /// If [ITER_ORDER_SORTED](Self::ITER_ORDER_SORTED) is true, values are guaranteed to be ordered by their keys.
-    fn values(self) -> impl Iterator<Item = &'a V> {
+    fn values(self) -> impl 'a + Iterator<Item = &'a V> {
         self.iter().map(|(_, v)| v)
     }
-    fn iter(self) -> impl Iterator<Item = (&'a K, &'a V)>;
+    fn iter(self) -> impl 'a + Iterator<Item = (&'a K, &'a V)>;
 }

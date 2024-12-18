@@ -62,15 +62,15 @@ impl<'a, K: 'a, V: 'a, M: RoMap<'a, K, V>> RoMap<'a, K, ()> for RoMapSet<'a, K, 
         Some((self.inner.get_key(k)?, &()))
     }
 
-    fn keys(self) -> impl Iterator<Item = &'a K> {
+    fn keys(self) -> impl 'a + Iterator<Item = &'a K> {
         self.inner.keys()
     }
 
-    fn values(self) -> impl Iterator<Item = &'a ()> {
+    fn values(self) -> impl 'a + Iterator<Item = &'a ()> {
         std::iter::repeat(&()).take(self.inner.len())
     }
 
-    fn iter(self) -> impl Iterator<Item = (&'a K, &'a ())> {
+    fn iter(self) -> impl 'a + Iterator<Item = (&'a K, &'a ())> {
         self.inner.keys().map(|k| (k, &()))
     }
 }
