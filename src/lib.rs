@@ -9,9 +9,9 @@
 //! # struct Dog;
 //! # trait Pet:'static{}
 //! trait MyPetList {
-//!     fn cats(&self) -> impl RoMap<String, Cat>;
-//!     fn dogs(&self) -> impl RoMap<String, Dog>;
-//!     fn all_pets(&self) -> impl RoMap<String, dyn Pet>;
+//!     fn cats(&self) -> impl RoMap<str, Cat>;
+//!     fn dogs(&self) -> impl RoMap<str, Dog>;
+//!     fn all_pets(&self) -> impl RoMap<str, dyn Pet>;
 //! }
 //! ```
 //! This crate also provides implementations for the applicable `std` collections: `{Hash|BTree}{Map|Set}`.
