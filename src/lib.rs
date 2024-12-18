@@ -1,18 +1,28 @@
 #![cfg_attr(not(feature = "std"), no_std)]
-
-//! This crate provides the [`RoMap`](RoMap) trait, which describes a read-only-map data structure.
-//! It is intended to allow library authors more flexibility in the types they accept:
+#![allow(rustdoc::redundant_explicit_links)]
+//! The [`RoMap`](RoMap) trait, describes a read-only-map.
+//! It is intended to allow library authors more flexibility in the types they accept.
+//!
+//! This crate includes combinators and implementations for common containers.
 //!
 //! ```rust
 //! # use std::collections::{BTreeMap, HashMap};
-//! use romap::{deref_value, RoMap};
+//! use romap::{deref_value, project_value, union, RoMap};
 //! # struct Cat;
 //! # struct Dog;
 //! # trait Pet:'static{}
+//! # impl Pet for Dog{}
+//! # impl Pet for Cat{}
+//!
 //! trait MyPetListTrait {
 //!     fn cats(&self) -> impl RoMap<str, Cat>;
 //!     fn dogs(&self) -> impl RoMap<str, Dog>;
-//!     fn all_pets(&self) -> impl RoMap<str, dyn Pet>;
+//!     fn all_pets(&self) -> impl RoMap<str, dyn Pet> {
+//!         union(
+//!             project_value(self.cats(), |p| p as &dyn Pet),
+//!             project_value(self.dogs(), |p| p as &dyn Pet),
+//!         )
+//!     }
 //! }
 //!
 //! struct MyPetListImpl {
@@ -28,13 +38,8 @@
 //!     fn dogs(&self) -> impl RoMap<str, Dog> {
 //!         deref_value(&self.dogs)
 //!     }
-//!
-//!     fn all_pets(&self) -> impl RoMap<str, dyn Pet> {
-//!         todo!()
-//!     }
 //! }
 //! ```
-//! This crate also provides implementations for the applicable `std` collections: `{Hash|BTree}{Map|Set}`.
 
 pub use ro_map_set::RoMapSet;
 pub use union::{union, Union};
