@@ -43,13 +43,16 @@
 
 pub use discard_values::discard_values;
 pub use empty::Empty;
+pub use filter::{filter_key, filter_kv};
 pub use union::union;
 pub use value_projection::{deref_value, project_value};
 mod discard_values;
+mod filter;
 
 /// The concrete combinator types
 pub mod structs {
     pub use crate::discard_values::DiscardValues;
+    pub use crate::filter::{FilterKey, FilterKv};
     pub use crate::union::Union;
 }
 mod either;
