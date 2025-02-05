@@ -1,7 +1,7 @@
 use crate::RoMap;
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
-use std::hash::Hash;
+use std::hash::{BuildHasher, Hash};
 
 macro_rules! impl_map {
     ($Container:ty) => {
@@ -40,10 +40,10 @@ macro_rules! impl_map {
     };
 }
 
-impl<'a, KI: Hash + Eq + Borrow<KO>, V: 'a, KO: Hash + Eq + ?Sized + 'a> RoMap<'a, KO, V>
-    for &'a HashMap<KI, V>
+impl<'a, KI: Hash + Eq + Borrow<KO>, V: 'a, KO: Hash + Eq + ?Sized + 'a, S: BuildHasher>
+    RoMap<'a, KO, V> for &'a HashMap<KI, V, S>
 {
-    impl_map!(HashMap::<KI, V>);
+    impl_map!(HashMap::<KI, V, S>);
 }
 
 impl<'a, KI: Ord + Borrow<KO>, V: 'a, KO: Ord + ?Sized + 'a> RoMap<'a, KO, V>
@@ -78,10 +78,10 @@ macro_rules! impl_set {
     };
 }
 
-impl<'a, KI: Hash + Eq + Borrow<KO>, KO: Hash + Eq + ?Sized + 'a> RoMap<'a, KO, ()>
-    for &'a HashSet<KI>
+impl<'a, KI: Hash + Eq + Borrow<KO>, KO: Hash + Eq + ?Sized + 'a, S: BuildHasher> RoMap<'a, KO, ()>
+    for &'a HashSet<KI, S>
 {
-    impl_set!(HashSet<KI>);
+    impl_set!(HashSet<KI,S>);
 }
 
 impl<'a, KI: Ord + Borrow<KO>, KO: Ord + ?Sized + 'a> RoMap<'a, KO, ()> for &'a BTreeSet<KI> {
