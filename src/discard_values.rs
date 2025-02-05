@@ -63,7 +63,7 @@ impl<'a, K: 'a + ?Sized, V: 'a + ?Sized, M: RoMap<'a, K, V>> RoMap<'a, K, ()>
     }
 
     fn values(self) -> impl 'a + Iterator<Item = &'a ()> {
-        core::iter::repeat(&()).take(self.inner.len())
+        core::iter::repeat_n(&(), self.inner.len())
     }
 
     fn iter(self) -> impl 'a + Iterator<Item = (&'a K, &'a ())> {
